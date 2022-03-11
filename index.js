@@ -33,6 +33,7 @@ let persons = [
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cors())
+app.use(express.static('build'))
 morganBody(app)
 const asiigPersona=(req,res,next)=>{
     const person=  req.body
