@@ -60,20 +60,15 @@ app.put('/api/persons/:id',(req,res,next)=>{
         res.json(result)
     }).catch(error=>next(error))
 })
-app.post('/api/persons',(req,res)=>{
+app.post('/api/persons',(req,res,next)=>{
     const body = req.body
-    if(!body.name || !body.number){
-        return res.status(400).json({
-            error : 'number or name none'
-        })
-    }
     const persona = persons({
         name : body.name,
         number : body.number
     })
     persona.save().then(result=>{
-        res.json(result)
-    })
+        res.json(result.toJSON())
+    }).catch(error=>next(error))
     
 })
 const unknownEndpoint = (request, response) => {
@@ -84,6 +79,12 @@ const errorHandle = (error, request,response,next)=>{
     console.error(error.message)
     if(error.name==="CastError"){
         response.status(400).send({error : 'malformatted id'})
+    }
+    if(error.name==="ValidationError"){
+        response.status(400).json({error : error.message})
+    }
+    if(error.name==="ValidatorError"){
+        response.status(400).json({error: error.message})
     }
     next(error)
 }
