@@ -1,13 +1,12 @@
-const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
 
-const url = process.env.MOONGO_URI;
-console.log('connecting to ', url);
-mongoose.connect(url).then(result=>{
-    console.log('connect to MongoDb');
-})
-.catch((error)=>{
-    console.log('error connecting to MongoDb',error.message);
+const url = process.env.MOONGO_URI
+console.log('connecting to ', url)
+mongoose.connect(url).then( result => {
+    console.log('connect to MongoDb',result.connections.map(ele => ele.name))
+}).catch(error => {
+    console.log('error connecting to MongoDb',error.message)
 })
 
 const PhoneBookShecma = new mongoose.Schema({
@@ -24,7 +23,7 @@ const PhoneBookShecma = new mongoose.Schema({
 })
 PhoneBookShecma.plugin(uniqueValidator)
 PhoneBookShecma.set('toJSON',{
-    transform : (document, returnedObjec)=>{
+    transform : (document, returnedObjec) => {
         returnedObjec.id = returnedObjec._id.toString(),
         delete returnedObjec._id,
         delete returnedObjec.__v
